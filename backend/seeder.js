@@ -1,52 +1,90 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const faker = require('faker');
 const slugify = require('slugify');
+
+const prisma = new PrismaClient();
 
 async function main() {
   try {
-    // Inserimento degli utenti
-    const user1 = await prisma.user.create({
+    // Creazione dell'utente admin
+    const admin = await prisma.user.create({
       data: {
-        email: 'user1@example.com',
-        name: 'User 1',
-        password: 'password1',
+        email: 'admin@example.com',
+        name: 'Admin',
+        password: 'adminpassword',
       },
     });
 
-    // Inserimento delle categorie
-    const category1 = await prisma.category.create({
-      data: {
-        name: 'Nature',
-      },
-    });
-
-    const category2 = await prisma.category.create({
-      data: {
-        name: 'Travel',
-      },
-    });
-
-    // Inserimento delle foto
-    const photo1 = await prisma.photo.create({
-      data: {
-        title: 'Beautiful Sunset',
-        description: 'A stunning sunset over the ocean',
-        image: 'https://example.com/sunset.jpg',
-        userId: user1.id,
-        slug: slugify('Beautiful Sunset', { lower: true }),
-        categories: {
-          connect: [{ id: category1.id }],
+    // Creazione delle categorie
+    const categoryNames = [
+      'Nature',
+      'Travel',
+      'Food',
+      'Technology',
+      'Art',
+      'Sports',
+      'Fashion',
+      'Music',
+      'Books',
+      'Movies',
+    ];
+    
+    const categories = [];
+    for (let i = 0; i < categoryNames.length; i++) {
+      const category = await prisma.category.create({
+        data: {
+          name: categoryNames[i],
         },
-      },
-    });
+      });
+      categories.push(category);
+    }
 
-    // Inserimento dei messaggi di contatto
-    const contact1 = await prisma.contact.create({
-      data: {
-        email: 'user@example.com',
-        message: 'Hello, I love your photos!',
-      },
-    });
+    console.log('Categories seeded successfully:', categories);
+
+    // Creazione delle foto
+    const photos = [];
+    for (let i = 0; i < 10; i++) {
+      const title = faker.lorem.words(3);
+      const description = faker.lorem.sentence();
+      const image = `https://picsum.photos/800/800?random=${Math.random()}`;
+      const slug = slugify(title, { lower: true });
+
+      const photo = await prisma.photo.create({
+        data: {
+          title,
+          description,
+          image,
+          userId: admin.id,
+          slug,
+          categories: {
+            connect: { id: categories[i].id },
+          },
+        },
+      });
+
+      photos.push(photo);
+    }
+
+    // Creazione dei messaggi di contatto
+    const contacts = [];
+    for (let i = 0; i < 20; i++) {
+      const email = faker.internet.email();
+      const message = faker.lorem.paragraph();
+    
+      try {
+        const contact = await prisma.contact.create({
+          data: {
+            email,
+            message,
+          },
+        });
+        console.log('Created contact:', contact); // Log della creazione del contatto
+        contacts.push(contact);
+      } catch (error) {
+        console.error('Error creating contact:', error); // Log degli errori
+      }
+    }
+    
 
     console.log('Seed data inserted successfully!');
   } catch (error) {
