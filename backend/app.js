@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRouter');
 const photoRoutes = require('./routes/photosRouter');
 const categoryRoutes = require('./routes/categoriesRouter');
 const authenticateToken = require('./middlewares/auth');
+const contactRoutes = require('./routes/contactsRouter')
 
 // Carica le variabili d'ambiente da .env
 dotenv.config();
@@ -24,6 +25,9 @@ app.use('/api/photos', authenticateToken, photoRoutes);
 
 // Rotte per le categorie (protette da autenticazione)
 app.use('/api/categories', authenticateToken, categoryRoutes);
+
+// Rotta per i messaggi di contatto
+app.use('/api/contacts', contactRoutes);
 
 // Gestione della richiesta per favicon.ico
 app.get('/favicon.ico', (req, res) => {
