@@ -4,11 +4,41 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model Photo {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String
+  visible     Boolean
+  categories  PhotoCategory[]
+}
+
+model Category {
+  id    Int             @id @default(autoincrement())
+  name  String          @unique
+  photos PhotoCategory[]
+}
+
+model PhotoCategory {
+  photoId    Int
+  categoryId Int
+  photo      Photo     @relation(fields: [photoId], references: [id])
+  category   Category  @relation(fields: [categoryId], references: [id])
+  @@id([photoId, categoryId])
+}
+
+model ContactMessage {
+  id      Int      @id @default(autoincrement())
+  email   String
+  message String
+  createdAt DateTime @default(now())
 }
