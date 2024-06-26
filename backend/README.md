@@ -27,6 +27,7 @@ Backend Milestone
 1. Implementazione delle API per le Foto
 
 - Creare le rotte e i controller per aggiungere, visualizzare, modificare e cancellare le foto.
+
 - Implementare la validazione dei dati in ingresso.
 
 2. Test delle API per le Foto con Postman
@@ -50,10 +51,12 @@ Verificare che le operazioni funzionino correttamente e che la validazione sia e
 
 - Creare il sistema di autenticazione (registrazione, login, logout) per l'area amministrativa.
 - Proteggere le rotte amministrative con autenticazione.
+
 2. Implementazione delle API per i Messaggi di Contatto
 
 - Creare le rotte e i controller per salvare i messaggi di contatto nel database.
 - Implementare la validazione dei dati in ingresso.
+
 3. Test delle API per Autenticazione e Messaggi di Contatto con Postman
 
 - Testare tutte le operazioni relative all'autenticazione e ai messaggi di contatto utilizzando Postman.

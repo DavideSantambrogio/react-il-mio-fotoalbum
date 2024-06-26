@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -13,32 +7,59 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Modello per le foto
 model Photo {
-  id          Int         @id @default(autoincrement())
-  title       String
-  description String
-  imageUrl    String
-  visible     Boolean
-  categories  PhotoCategory[]
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String    @db.VarChar(255) 
+  description String?   @db.Text
+  image       String    
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  categories  Category[]
+
+  // Relazione con l'utente che ha caricato la foto
+  user        User?     @relation(fields: [userId], references: [id])
+
+  // Chiave esterna per l'utente
+  userId      Int?
+
+  @@map("photos")
 }
 
+// Modello per le categorie
 model Category {
-  id    Int             @id @default(autoincrement())
-  name  String          @unique
-  photos PhotoCategory[]
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  photos    Photo[]   // Relazione con le foto
+
+  @@map("categories")
 }
 
-model PhotoCategory {
-  photoId    Int
-  categoryId Int
-  photo      Photo     @relation(fields: [photoId], references: [id])
-  category   Category  @relation(fields: [categoryId], references: [id])
-  @@id([photoId, categoryId])
+// Modello per gli utenti
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  role      String    @default("user")
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  photos    Photo[]   // Relazione con le foto caricate dall'utente
+
+  @@map("users")
 }
 
-model ContactMessage {
-  id      Int      @id @default(autoincrement())
-  email   String
-  message String
-  createdAt DateTime @default(now())
+// Modello per i messaggi di contatto
+model Contact {
+  id        Int       @id @default(autoincrement())
+  email     String
+  message   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("contacts")
 }
