@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 // Rotte per le foto - Utilizza il percorso /api/photos
 app.use('/api/photos', photoRoutes);
 
+// Rotte per le categorie
+const categoryRoutes = require('./routes/categories');
+app.use('/api/categories', categoryRoutes);
+
 // Gestione della richiesta per favicon.ico
 app.get('/favicon.ico', (req, res) => {
   res.status(404).send('Favicon non trovato');
