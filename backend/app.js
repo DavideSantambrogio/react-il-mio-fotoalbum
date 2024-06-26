@@ -1,7 +1,10 @@
 // Import dei moduli necessari
 const express = require('express');
 const dotenv = require('dotenv');
-const photoRoutes = require('./routes/photos'); // Importa le rotte delle foto
+const authRoutes = require('./routes/authRouter');
+const photoRoutes = require('./routes/photosRouter');
+const categoryRoutes = require('./routes/categoriesRouter');
+const authenticateToken = require('./middlewares/auth');
 
 // Carica le variabili d'ambiente da .env
 dotenv.config();
@@ -13,12 +16,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rotte per le foto - Utilizza il percorso /api/photos
-app.use('/api/photos', photoRoutes);
+// Rotte per l'autenticazione
+app.use('/api/auth', authRoutes);
 
-// Rotte per le categorie
-const categoryRoutes = require('./routes/categories');
-app.use('/api/categories', categoryRoutes);
+// Rotte per le foto (protette da autenticazione)
+app.use('/api/photos', authenticateToken, photoRoutes);
+
+// Rotte per le categorie (protette da autenticazione)
+app.use('/api/categories', authenticateToken, categoryRoutes);
 
 // Gestione della richiesta per favicon.ico
 app.get('/favicon.ico', (req, res) => {
