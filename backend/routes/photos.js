@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const photoController = require('../controllers/photoController');
+const { body, param } = require('express-validator');
+const { createPhoto, getAllPhotos, getPhotoById, updatePhoto, deletePhoto, validatePhotoData, validatePhotoId } = require('../controllers/photoController');
 
-// Rotte per le foto
-router.post('/', photoController.createPhoto);
-router.get('/', photoController.getAllPhotos);
-router.get('/:id', photoController.getPhotoById);
-router.put('/:id', photoController.updatePhoto);
-router.delete('/:id', photoController.deletePhoto);
+router.post('/', validatePhotoData(), createPhoto);
+
+router.get('/', getAllPhotos);
+
+router.get('/:id', validatePhotoId(), getPhotoById);
+
+router.put('/:id', validatePhotoId(), validatePhotoData(), updatePhoto);
+
+router.delete('/:id', validatePhotoId(), deletePhoto);
 
 module.exports = router;
