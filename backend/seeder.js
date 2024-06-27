@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const faker = require('faker');
 const slugify = require('slugify');
+const crypto = require('crypto');
 
 const prisma = new PrismaClient();
 
@@ -28,7 +29,7 @@ async function main() {
       'Books',
       'Movies',
     ];
-    
+
     const categories = [];
     for (let i = 0; i < categoryNames.length; i++) {
       const category = await prisma.category.create({
@@ -43,11 +44,17 @@ async function main() {
 
     // Creazione delle foto
     const photos = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 1; i <= 10; i++) {
       const title = faker.lorem.words(3);
       const description = faker.lorem.sentence();
-      const image = `https://picsum.photos/800/800?random=${Math.random()}`;
       const slug = slugify(title, { lower: true });
+      const categoryId = categories[Math.floor(Math.random() * categories.length)].id; // Scelgo casualmente una categoria
+
+      // Calcolo del numero randomico basato sull'hash del titolo della foto
+      const hash = crypto.createHash('md5').update(title).digest('hex');
+      const randomNum = parseInt(hash.substring(0, 8), 16); // Prendi i primi 8 caratteri dell'hash e converti in numero
+
+      const image = `https://picsum.photos/800/800?random=${randomNum}`;
 
       const photo = await prisma.photo.create({
         data: {
@@ -56,35 +63,32 @@ async function main() {
           image,
           userId: admin.id,
           slug,
-          categories: {
-            connect: { id: categories[i].id },
-          },
+          categoryId, // Collego la foto alla categoria scelta casualmente
         },
       });
 
       photos.push(photo);
     }
 
+    console.log('Photos seeded successfully:', photos);
+
     // Creazione dei messaggi di contatto
     const contacts = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 1; i <= 20; i++) {
       const email = faker.internet.email();
       const message = faker.lorem.paragraph();
-    
-      try {
-        const contact = await prisma.contact.create({
-          data: {
-            email,
-            message,
-          },
-        });
-        console.log('Created contact:', contact); // Log della creazione del contatto
-        contacts.push(contact);
-      } catch (error) {
-        console.error('Error creating contact:', error); // Log degli errori
-      }
+
+      const contact = await prisma.contact.create({
+        data: {
+          email,
+          message,
+        },
+      });
+
+      contacts.push(contact);
     }
-    
+
+    console.log('Contacts seeded successfully:', contacts);
 
     console.log('Seed data inserted successfully!');
   } catch (error) {

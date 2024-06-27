@@ -1,17 +1,19 @@
-// Import dei moduli necessari
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const authRoutes = require('./routes/authRouter');
 const photoRoutes = require('./routes/photosRouter');
 const categoryRoutes = require('./routes/categoriesRouter');
-const authenticateToken = require('./middlewares/auth');
-const contactRoutes = require('./routes/contactsRouter')
+const contactRoutes = require('./routes/contactsRouter');
 
 // Carica le variabili d'ambiente da .env
 dotenv.config();
 
 // Inizializza l'app Express
 const app = express();
+
+// Abilita CORS per tutte le richieste
+app.use(cors());
 
 // Middleware per il parsing del body delle richieste JSON
 app.use(express.json());
@@ -20,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 // Rotte per l'autenticazione
 app.use('/api/auth', authRoutes);
 
-// Rotte per le foto (protette da autenticazione)
-app.use('/api/photos', authenticateToken, photoRoutes);
+// Rotte per le foto (protette da autenticazione, tranne GET)
+app.use('/api/photos', photoRoutes);
 
-// Rotte per le categorie (protette da autenticazione)
-app.use('/api/categories', authenticateToken, categoryRoutes);
+// Rotte per le categorie (accesso pubblico)
+app.use('/api/categories', categoryRoutes);
 
 // Rotta per i messaggi di contatto
 app.use('/api/contacts', contactRoutes);

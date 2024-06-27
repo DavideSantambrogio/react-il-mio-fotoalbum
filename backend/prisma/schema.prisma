@@ -17,7 +17,10 @@ model Photo {
   published   Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  categories  Category[]
+  categoryId  Int       // Campo per l'ID della categoria
+
+  // Relazione con la categoria
+  categories  Category  @relation(fields: [categoryId], references: [id])
 
   // Relazione con l'utente che ha caricato la foto
   user        User?     @relation(fields: [userId], references: [id])
@@ -27,6 +30,7 @@ model Photo {
 
   @@map("photos")
 }
+
 
 // Modello per le categorie
 model Category {
