@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, CardBody, CardTitle, CardText, Button, Row, Col } from 'reactstrap';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import ReceivedEmails from '../components/ReceivedEmails';
 
-
 const PersonalAreaPage = () => {
-    const { token } = useAuth();
+    const { token, logout } = useAuth();
+    const navigate = useNavigate();
     const [photos, setPhotos] = useState([]);
     const [error, setError] = useState(null);
 
@@ -44,6 +45,11 @@ const PersonalAreaPage = () => {
         // Implement update logic here
     };
 
+    const handleLogout = () => {
+        logout(); // Esegui il logout utilizzando il metodo dal contesto
+        navigate('/'); // Reindirizza alla pagina principale dopo il logout
+    };
+
     return (
         <Container>
             <h2 className="text-center my-4">Personal Area</h2>
@@ -70,8 +76,8 @@ const PersonalAreaPage = () => {
                 </Col>
 
                 <Col md={4}>
-                <ReceivedEmails/>
-
+                    <ReceivedEmails/>
+                    <Button color="secondary" onClick={handleLogout} className="mt-4">Logout</Button>
                 </Col>
 
             </Row>
