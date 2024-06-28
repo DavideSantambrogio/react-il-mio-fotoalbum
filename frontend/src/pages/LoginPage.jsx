@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -15,8 +15,7 @@ const LoginPage = () => {
     setError(null);
     try {
       await login(email, password);
-      // Redirect dopo il login, esempio alla homepage
-      navigate('/');
+      navigate('/personal-area');
     } catch (error) {
       setError('Failed to login. Please check your credentials.');
     }

@@ -3,24 +3,34 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './pages/HomePage.jsx';
-import './index.css';
 import AboutPage from './pages/AboutPage.jsx';
-import { AuthProvider } from './context/AuthContext.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import PersonalAreaPage from './pages/PersonalAreaPage.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
+import { AuthProvider } from './context/AuthContext';
+import './index.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />
+    element: <HomePage />,
   },
   {
     path: '/about',
-    element: <AboutPage/>
+    element: <AboutPage />,
   },
   {
     path: '/login',
-    element: <LoginPage/>
-  }
+    element: <LoginPage />,
+  },
+  {
+    path: '/personal-area',
+    element: (
+      <PrivateRoute>
+        <PersonalAreaPage />
+      </PrivateRoute>
+    ),
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -28,5 +38,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
