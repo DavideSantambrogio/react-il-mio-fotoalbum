@@ -24,10 +24,10 @@ function Navbar() {
                         <NavLink href="/">Home</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink href="/about">Tutte le foto WIP</NavLink>
+                        <NavLink href="/about">About</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink href="/contact">About WIP</NavLink>
+                        <NavLink href="/contact">Tutte le foto WIP</NavLink>
                     </NavItem>
                 </Nav>
                 <Nav navbar>
