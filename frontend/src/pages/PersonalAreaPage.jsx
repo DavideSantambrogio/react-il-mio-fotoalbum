@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Container, Card, CardBody, CardTitle, CardText, Button, Row, Col } from 'reactstrap';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import ReceivedEmails from '../components/ReceivedEmails';
+
 
 const PersonalAreaPage = () => {
     const { token } = useAuth();
@@ -68,6 +70,7 @@ const PersonalAreaPage = () => {
                 </Col>
 
                 <Col md={4}>
+                <ReceivedEmails/>
 
                 </Col>
 
